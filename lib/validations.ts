@@ -19,9 +19,16 @@ export const geofenceSchema = z.object({
   enabled: z.boolean().default(true),
 });
 
+// accepts both datetime-local format ("2026-03-09T14:53") and full ISO strings
+const dateTimeString = z
+  .string()
+  .min(1, "Date/time is required")
+  .transform((v) => new Date(v).toISOString())
+  .refine((v) => !isNaN(new Date(v).getTime()), { message: "Invalid date/time" });
+
 export const timeEntrySchema = z.object({
-  startTime: z.string().datetime(),
-  endTime: z.string().datetime().optional().nullable(),
+  startTime: dateTimeString,
+  endTime: dateTimeString.optional().nullable(),
   notes: z.string().max(500).optional().nullable(),
   source: z.enum(["AUTO", "MANUAL"]).default("MANUAL"),
   locationLat: z.number().optional().nullable(),
