@@ -48,7 +48,8 @@ DIRECT_URL=postgresql://postgres.[project-ref]:[password]@aws-0-[region].pooler.
 
 # NextAuth — generate with: openssl rand -base64 32
 AUTH_SECRET=your-secret-here
-NEXTAUTH_URL=http://localhost:3000
+# Set to your production URL on Netlify/Vercel
+NEXTAUTH_URL=your-deployed-url
 ```
 
 ### 3. Push the database schema
@@ -63,7 +64,7 @@ npx dotenv-cli -e .env.local -- npx prisma db push
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000), register an account, and you're ready.
+Open your local dev server, register an account, and you're ready.
 
 ## Project Structure
 
