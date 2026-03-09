@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id          String      @id @default(cuid())
+  email       String      @unique
+  password    String
+  name        String?
+  hourlyRate  Float?
+  createdAt   DateTime    @default(now())
+  geofence    Geofence?
+  timeEntries TimeEntry[]
+}
+
+model Geofence {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  address   String
+  latitude  Float
+  longitude Float
+  radius    Float    @default(100)
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model TimeEntry {
+  id          String      @id @default(cuid())
+  userId      String
+  startTime   DateTime
+  endTime     DateTime?
+  duration    Int?
+  source      EntrySource @default(MANUAL)
+  notes       String?
+  locationLat Float?
+  locationLng Float?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum EntrySource {
+  AUTO
+  MANUAL
+}
